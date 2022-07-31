@@ -1,0 +1,28 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
+
+<h1>Create post</h1>
+
+<form action="{% url 'posts:post_create' %}" method="post">
+  {% csrf_token %}
+  <div>
+    <div>
+      <label for="post-title">Post title</label>
+    </div>
+    <div>
+      <textarea id="post-title" name="title" placeholder="Post title here..." required></textarea>
+    </div>
+  </div>
+  <div>
+    <div>
+      <label for="post-text">Post text</label>
+    </div>
+    <div>
+      <textarea id="post-text" name="text" placeholder="Post text here..." required></textarea>
+    </div>
+  </div>
+  <div>
+    <input id="submit" type="submit" value="Create">
+  </div>
+</form>
