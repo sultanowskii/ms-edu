@@ -21,3 +21,24 @@
 .post-text {
   font-size: 1em;
 }
+
+.invisible-btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+}
+
+.delete-btn {
+  color: red;
+}
+
+.delete-txt {
+  color: red;
+}
+
+.delete-txt:hover {
+  text-decoration: underline;
+}

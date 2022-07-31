@@ -30,9 +30,24 @@ def create_post(request):
     return render(request, 'posts/create.html')
 
 
+def delete_post(request, pk):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
+        post.delete()
+        return HttpResponseRedirect(reverse('posts:post_index'))
+
 def post_add_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_text = request.POST['comment_text']
     Comment.objects.create(text=comment_text, post=post, pub_date=timezone.now())
     return HttpResponseRedirect(reverse('posts:post_detail', args=(pk,)))
+
+
+def delete_comment(request, pk):
+    print("inside")
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, pk=pk)
+        post_pk = comment.post.pk
+        comment.delete()
+        return HttpResponseRedirect(reverse('posts:post_detail', args=(post_pk,)))
 

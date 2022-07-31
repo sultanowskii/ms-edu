@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
 
+
 <div style="display: flex; flex-direction: column; gap: 0.8em;">
   <div class="post-block">
     <div>
@@ -21,10 +22,15 @@
     <span style="font-size: 1.2em; padding-top: 1.5em;">Comments:</span>
     {% for comment in post.comments.all %}
       <div class="comment">
-        <div>
-          {{ comment.text }}
+        <div style="display: flex; flex-direction: row;"> 
+          {{ comment.text }} (
+            <form action="{% url 'posts:comment_delete' comment.id %}" method="post" style="margin-bottom: 0px;">
+              {% csrf_token %}
+              <input type="submit" value="delete" class="invisible-btn delete-txt">
+            </form>
+          )
         </div>
-        <div>
+        <div> 
           <span class="comment-info">Posted at {{ comment.pub_date }} by anon</span>
         </div>
       </div>
@@ -33,11 +39,17 @@
   
   <form action="{% url 'posts:post_add_comment' post.id %}" method="post">
     {% csrf_token %}
-      <div>
-        <textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
-      </div>
-      <div>
-        <input type="submit" value="Add comment">
-      </div>
+    <div>
+      <textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
+    </div>
+    <div>
+      <input type="submit" value="Add comment">
+    </div>
+  </form>
+  <form action="{% url 'posts:post_delete' post.id %}" method="post">
+    {% csrf_token %}
+    <div>
+      <input type="submit" value="Delete post" class="delete-btn">
+    </div>
   </form>
 </div>

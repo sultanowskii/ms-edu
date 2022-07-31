@@ -2,17 +2,23 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
 
-<a href="{% url 'posts:post_create' %}">Create post</a>
-
 {% if latest_post_list %}
-    <h1>Posts</h1>
-    <ul>
-    {% for post in latest_post_list %}
-        <li>
-            <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+  <div style="display: flex; flex-direction: row; align-items: baseline; gap: 10em;">
+    <div>
+      <span style="font-size: 2em;">Posts</span>
+    </div>
+    <div>
+      <a href="{% url 'posts:post_create' %}">Create post</a>
+    </div>
+  </div>
+  <ul>
+  {% for post in latest_post_list %}
+    <li>
+      <a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
 {% else %}
-    <p class="noting">No posts are available.</p>
+  <p class="noting">No posts are available.</p>
+  <a href="{% url 'posts:post_create' %}">Be first to create one!</a>
 {% endif %}
