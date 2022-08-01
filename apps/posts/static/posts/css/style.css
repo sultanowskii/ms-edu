@@ -1,0 +1,44 @@
+.comment + .comment {
+  margin-bottom: 0.3em;
+  margin-top: 0.3em;
+}
+
+.comment-info {
+  font-size: 0.6em;
+  color: grey;
+}
+
+.post-info {
+  font-size: 0.6em;
+  color: grey;
+}
+
+.post-title {
+  font-size: 1.6em;
+  font-weight: bolder;
+}
+
+.post-text {
+  font-size: 1em;
+}
+
+.invisible-btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+}
+
+.delete-btn {
+  color: red;
+}
+
+.delete-txt {
+  color: red;
+}
+
+.delete-txt:hover {
+  text-decoration: underline;
+}
