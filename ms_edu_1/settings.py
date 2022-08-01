@@ -139,7 +139,7 @@ INTERNAL_IPS = [
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': "%s.true" % __name__,
+    'SHOW_TOOLBAR_CALLBACK': '%s.true' % __name__,
 }
 
 def true(request):
