@@ -26,8 +26,15 @@ def create_post(request):
     if request.method == 'POST':
         title = request.POST['title']
         text = request.POST['text']
-        Post.objects.create(title=title, text=text, pub_date=timezone.now())
+
+        Post.objects.create(
+            title=title,
+            text=text,
+            pub_date=timezone.now(),
+        )
+
         return HttpResponseRedirect(reverse('posts:post_index'))
+
     return render(request, 'posts/create.html')
 
 
@@ -50,7 +57,6 @@ def post_add_comment(request, pk):
 
 
 def delete_comment(request, pk):
-    print("inside")
     if request.method == 'POST':
         comment = get_object_or_404(Comment, pk=pk)
         post_pk = comment.post.pk
