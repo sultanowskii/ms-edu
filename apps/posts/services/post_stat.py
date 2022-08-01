@@ -22,7 +22,7 @@ def get_posts_stat() -> dict:
     post_with_many_comments = (
         Post.objects
         .annotate(comment_count=Count('comments'))
-        .filter(comment_count__ge=avg_comment_cnt)
+        .filter(comment_count__gte=avg_comment_cnt)
         .count()
     )
 
