@@ -1,55 +1,58 @@
-{% load static %}
+<head>
+  {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
+</head>
 
-
-<div style="display: flex; flex-direction: column; gap: 0.8em;">
-  <div class="post-block">
-    <div>
-     <span class="post-title">{{ post.title }}</span>
-    </div>
-    <div>
-     <span class="post-text">{{ post.text }}</span>
-    </div>
-    <div>
-      <span class="post-info">Posted at {{ post.pub_date }} by anon</span>
-    </div>
-  </div>
-  
-  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-  
-  <div class="comment-block">
-    <span style="font-size: 1.2em; padding-top: 1.5em;">Comments:</span>
-    {% for comment in post.comments.all %}
-      <div class="comment">
-        <div style="display: flex; flex-direction: row;"> 
-          {{ comment.text }} (
-            <form action="{% url 'posts:comment_delete' comment.id %}" method="post" style="margin-bottom: 0px;">
-              {% csrf_token %}
-              <input type="submit" value="delete" class="invisible-btn delete-txt">
-            </form>
-          )
-        </div>
-        <div> 
-          <span class="comment-info">Posted at {{ comment.pub_date }} by anon</span>
-        </div>
+<body>
+  <div style="display: flex; flex-direction: column; gap: 0.8em;">
+    <div class="post-block">
+      <div>
+      <span class="post-title">{{ post.title }}</span>
       </div>
-    {% endfor %}
+      <div>
+      <span class="post-text">{{ post.text }}</span>
+      </div>
+      <div>
+        <span class="post-info">Posted at {{ post.pub_date }} by anon</span>
+      </div>
+    </div>
+    
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    
+    <div class="comment-block">
+      <span style="font-size: 1.2em; padding-top: 1.5em;">Comments:</span>
+      {% for comment in post.comments.all %}
+        <div class="comment">
+          <div style="display: flex; flex-direction: row;"> 
+            {{ comment.text }} (
+              <form action="{% url 'posts:comment_delete' comment.id %}" method="post" style="margin-bottom: 0px;">
+                {% csrf_token %}
+                <input type="submit" value="delete" class="invisible-btn delete-txt">
+              </form>
+            )
+          </div>
+          <div> 
+            <span class="comment-info">Posted at {{ comment.pub_date }} by anon</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <form action="{% url 'posts:post_add_comment' post.id %}" method="post">
+      {% csrf_token %}
+      <div>
+        <textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
+      </div>
+      <div>
+        <input type="submit" value="Add comment">
+      </div>
+    </form>
+    <form action="{% url 'posts:post_delete' post.id %}" method="post">
+      {% csrf_token %}
+      <div>
+        <input type="submit" value="Delete post" class="delete-btn">
+      </div>
+    </form>
   </div>
-  
-  <form action="{% url 'posts:post_add_comment' post.id %}" method="post">
-    {% csrf_token %}
-    <div>
-      <textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
-    </div>
-    <div>
-      <input type="submit" value="Add comment">
-    </div>
-  </form>
-  <form action="{% url 'posts:post_delete' post.id %}" method="post">
-    {% csrf_token %}
-    <div>
-      <input type="submit" value="Delete post" class="delete-btn">
-    </div>
-  </form>
-</div>
+</body>

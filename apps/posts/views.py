@@ -1,10 +1,11 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.views import generic
 from django.urls import reverse
 from django.utils import timezone
+from django.views import generic
 
 from apps.posts.models import Post, Comment
+from apps.posts.services.post_stat import get_posts_stat
 
 
 class PostIndexView(generic.ListView):
@@ -36,6 +37,11 @@ def delete_post(request, pk):
         post.delete()
         return HttpResponseRedirect(reverse('posts:post_index'))
 
+
+def posts_stat(request):
+    return JsonResponse(get_posts_stat())
+    
+
 def post_add_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_text = request.POST['comment_text']
@@ -50,4 +56,3 @@ def delete_comment(request, pk):
         post_pk = comment.post.pk
         comment.delete()
         return HttpResponseRedirect(reverse('posts:post_detail', args=(post_pk,)))
-
