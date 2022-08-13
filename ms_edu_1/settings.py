@@ -145,3 +145,5 @@ DEBUG_TOOLBAR_CONFIG = {
 
 def true(request):
     return True
+
+LOGIN_URL = '/accounts/login/'

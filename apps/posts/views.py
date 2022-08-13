@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -22,6 +24,7 @@ class PostDetailView(generic.DetailView):
     template_name = 'posts/detail.html'
 
 
+@login_required
 def create_post(request):
     if request.method == 'POST':
         title = request.POST['title']
@@ -31,6 +34,7 @@ def create_post(request):
             title=title,
             text=text,
             pub_date=timezone.now(),
+            author=request.user,
         )
 
         return HttpResponseRedirect(reverse('posts:post_index'))
@@ -38,27 +42,39 @@ def create_post(request):
     return render(request, 'posts/create.html')
 
 
+@login_required
 def delete_post(request, pk):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=pk)
-        post.delete()
-        return HttpResponseRedirect(reverse('posts:post_index'))
+        if post.author == request.user or request.user.is_superuser:
+            post.delete()
+            return HttpResponseRedirect(reverse('posts:post_index'))
+        raise PermissionDenied()
 
 
 def posts_stat(request):
     return JsonResponse(get_posts_stat())
-    
 
+
+@login_required
 def post_add_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_text = request.POST['comment_text']
-    Comment.objects.create(text=comment_text, post=post, pub_date=timezone.now())
+    Comment.objects.create(
+        text=comment_text,
+        post=post,
+        pub_date=timezone.now(),
+        author=request.user,
+    )
     return HttpResponseRedirect(reverse('posts:post_detail', args=(pk,)))
 
 
+@login_required
 def delete_comment(request, pk):
     if request.method == 'POST':
         comment = get_object_or_404(Comment, pk=pk)
-        post_pk = comment.post.pk
-        comment.delete()
-        return HttpResponseRedirect(reverse('posts:post_detail', args=(post_pk,)))
+        if comment.author == request.user or request.user.is_superuser:
+            post_pk = comment.post.pk
+            comment.delete()
+            return HttpResponseRedirect(reverse('posts:post_detail', args=(post_pk,)))
+        raise PermissionDenied()
