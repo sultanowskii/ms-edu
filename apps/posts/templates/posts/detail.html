@@ -1,58 +1,76 @@
 <head>
-  {% load static %}
+	{% load static %}
 
-  <link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'posts/css/style.css' %}">
 </head>
 
 <body>
-  <div style="display: flex; flex-direction: column; gap: 0.8em;">
-    <div class="post-block">
-      <div>
-      <span class="post-title">{{ post.title }}</span>
-      </div>
-      <div>
-      <span class="post-text">{{ post.text }}</span>
-      </div>
-      <div>
-        <span class="post-info">Posted at {{ post.pub_date }} by anon</span>
-      </div>
-    </div>
-    
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    
-    <div class="comment-block">
-      <span style="font-size: 1.2em; padding-top: 1.5em;">Comments:</span>
-      {% for comment in post.comments.all %}
-        <div class="comment">
-          <div style="display: flex; flex-direction: row;"> 
-            {{ comment.text }} (
-              <form action="{% url 'posts:comment_delete' comment.id %}" method="post" style="margin-bottom: 0px;">
-                {% csrf_token %}
-                <input type="submit" value="delete" class="invisible-btn delete-txt">
-              </form>
-            )
-          </div>
-          <div> 
-            <span class="comment-info">Posted at {{ comment.pub_date }} by anon</span>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-    
-    <form action="{% url 'posts:post_add_comment' post.id %}" method="post">
-      {% csrf_token %}
-      <div>
-        <textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
-      </div>
-      <div>
-        <input type="submit" value="Add comment">
-      </div>
-    </form>
-    <form action="{% url 'posts:post_delete' post.id %}" method="post">
-      {% csrf_token %}
-      <div>
-        <input type="submit" value="Delete post" class="delete-btn">
-      </div>
-    </form>
-  </div>
+	<div style="display: flex; flex-direction: column; gap: 0.8em;">
+		<div class="post-block">
+			<div>
+				<span class="post-title">{{ post.title }}</span>
+			</div>
+			<div>
+				<span class="post-text">{{ post.text }}</span>
+			</div>
+			<div>
+				{% if post.author %}
+				<span class="post-info">Posted at {{ post.pub_date }} by @{{ post.author.username }}</span>
+				{% else %}
+				<span class="post-info">Posted at {{ post.pub_date }} by deleted account</span>
+				{% endif %}
+			</div>
+		</div>
+
+		{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+		<div class="comment-block">
+			<span style="font-size: 1.2em; padding-top: 1.5em;">Comments:</span>
+			{% for comment in post.comments.all %}
+			<div class="comment">
+				<div style="display: flex; flex-direction: row;">
+					{{ comment.text }} 
+					{% if comment.author == request.user %}
+					(
+					<form action="{% url 'posts:comment_delete' comment.id %}" method="post"
+						style="margin-bottom: 0px;">
+						{% csrf_token %}
+						<input type="submit" value="delete" class="invisible-btn delete-txt">
+					</form>
+					)
+					{% endif %}
+				</div>
+				<div>
+					{% if comment.author %}
+					<span class="comment-info">Posted at {{ comment.pub_date }} by @{{ comment.author.username }}</span>
+					{% else %}
+					<span class="comment-info">Posted at {{ comment.pub_date }} by deleted account</span>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+
+		{% if request.user.is_authenticated %}
+		<form action="{% url 'posts:post_add_comment' post.id %}" method="post">
+			{% csrf_token %}
+			<div>
+				<textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
+			</div>
+			<div>
+				<input type="submit" value="Add comment">
+			</div>
+		</form>
+		<form action="{% url 'posts:post_delete' post.id %}" method="post">
+			{% csrf_token %}
+			<div>
+				<input type="submit" value="Delete post" class="delete-btn">
+			</div>
+		</form>
+		{% else %}
+		<div>
+			Only authenticated users can add comments. <a href="{% url 'accounts:login' %}">Login</a>
+		</div>
+		{% endif %}
+	</div>
 </body>
