@@ -12,19 +12,19 @@
 		</div>
 		{% if request.user.is_authenticated %}
 		<div>
-			<a href="{% url 'posts:post_create' %}">Create post</a>
+			<a href="{% url 'posts:create' %}">Create post</a>
 		</div>
 		{% endif %}
 	</div>
 	<ul>
 		{% for post in latest_post_list %}
 		<li>
-			<a href="{% url 'posts:post_detail' post.id %}">{{ post.title }}</a>
+			<a href="{% url 'posts:detail' post.id %}">{{ post.title }}</a>
 		</li>
 		{% endfor %}
 	</ul>
 	{% else %}
 	<p class="noting">No posts are available.</p>
-	<a href="{% url 'posts:post_create' %}">Be first to create one!</a>
+	<a href="{% url 'posts:create' %}">Be first to create one!</a>
 	{% endif %}
 </body>

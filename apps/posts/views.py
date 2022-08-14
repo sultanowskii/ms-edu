@@ -37,7 +37,7 @@ def create_post(request):
             author=request.user,
         )
 
-        return HttpResponseRedirect(reverse('posts:post_index'))
+        return HttpResponseRedirect(reverse('posts:index'))
 
     return render(request, 'posts/create.html')
 
@@ -48,7 +48,7 @@ def delete_post(request, pk):
         post = get_object_or_404(Post, pk=pk)
         if post.author == request.user or request.user.is_superuser:
             post.delete()
-            return HttpResponseRedirect(reverse('posts:post_index'))
+            return HttpResponseRedirect(reverse('posts:index'))
         raise PermissionDenied()
 
 
@@ -66,7 +66,7 @@ def post_add_comment(request, pk):
         pub_date=timezone.now(),
         author=request.user,
     )
-    return HttpResponseRedirect(reverse('posts:post_detail', args=(pk,)))
+    return HttpResponseRedirect(reverse('posts:detail', args=(pk,)))
 
 
 @login_required
@@ -76,5 +76,5 @@ def delete_comment(request, pk):
         if comment.author == request.user or request.user.is_superuser:
             post_pk = comment.post.pk
             comment.delete()
-            return HttpResponseRedirect(reverse('posts:post_detail', args=(post_pk,)))
+            return HttpResponseRedirect(reverse('posts:detail', args=(post_pk,)))
         raise PermissionDenied()
