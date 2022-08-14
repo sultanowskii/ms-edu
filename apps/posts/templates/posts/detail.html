@@ -32,7 +32,7 @@
 					{{ comment.text }} 
 					{% if comment.author == request.user %}
 					(
-					<form action="{% url 'posts:comment_delete' comment.id %}" method="post"
+					<form action="{% url 'posts:delete_comment' comment.id %}" method="post"
 						style="margin-bottom: 0px;">
 						{% csrf_token %}
 						<input type="submit" value="delete" class="invisible-btn delete-txt">
@@ -52,7 +52,7 @@
 		</div>
 
 		{% if request.user.is_authenticated %}
-		<form action="{% url 'posts:post_add_comment' post.id %}" method="post">
+		<form action="{% url 'posts:add_comment' post.id %}" method="post">
 			{% csrf_token %}
 			<div>
 				<textarea type="text" name="comment_text" placeholder="Comment text here..."></textarea>
@@ -61,7 +61,7 @@
 				<input type="submit" value="Add comment">
 			</div>
 		</form>
-		<form action="{% url 'posts:post_delete' post.id %}" method="post">
+		<form action="{% url 'posts:delete' post.id %}" method="post">
 			{% csrf_token %}
 			<div>
 				<input type="submit" value="Delete post" class="delete-btn">
