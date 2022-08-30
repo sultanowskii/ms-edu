@@ -4,6 +4,7 @@ from apps.posts.models import Post
 
 
 def get_posts_stat() -> dict:
+    """Получить стастику по постам."""
     post_count = Post.objects.count()
 
     comment_summary = (
